@@ -6,12 +6,9 @@
 // marks them notified so nobody gets spammed twice.
 //
 // Required secrets (supabase secrets set ...):
-//   RESEND_API_KEY          — from resend.com (free tier: 100/day)
-//   ALERT_FROM_EMAIL        — e.g. "MoveMate <alerts@yourdomain.com>"
-//                             (until you verify a domain, Resend only
-//                              delivers to your own account email)
-//   APP_URL                 — your Render URL, e.g.
-//                             https://movemate.onrender.com
+//   RESEND_API_KEY          — from resend.com (sending-only key is fine)
+//   ALERT_FROM_EMAIL        — e.g. "MoveMate <noreply@movemateapp.co>"
+//   APP_URL                 — e.g. https://movemate-dfqj.onrender.com
 // SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY are provided by default.
 // ============================================================
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -19,8 +16,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_KEY = Deno.env.get("RESEND_API_KEY");
-const FROM = Deno.env.get("ALERT_FROM_EMAIL") ?? "MoveMate <alerts@movemate.app>";
-const APP_URL = Deno.env.get("APP_URL") ?? "https://movemate.onrender.com";
+const FROM = Deno.env.get("ALERT_FROM_EMAIL") ?? "MoveMate <noreply@movemateapp.co>";
+const APP_URL = Deno.env.get("APP_URL") ?? "https://movemate-dfqj.onrender.com";
 
 const sb = createClient(SUPABASE_URL, SERVICE_KEY);
 
