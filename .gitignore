@@ -1,1 +1,20 @@
 icons/media-generation-*
+node_modules/
+www/
+# Android build outputs
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/*.jks
+android/app/*.keystore
+# iOS build outputs
+ios/App/build/
+ios/DerivedData/
+# macOS
+.DS_Store
+# Env / secrets
+.env
+*.pem
+*.p12
+*.mobileprovision

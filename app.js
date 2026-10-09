@@ -59,8 +59,8 @@ init();
 async function init() {
   buildRoleInputs();
   wireEvents();
-  // PWA: register the service worker (silent if unsupported)
-  if ("serviceWorker" in navigator) {
+  // PWA: register the service worker (silent if unsupported; skipped in native builds)
+  if ("serviceWorker" in navigator && !window.Capacitor) {
     window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
   }
   const { data } = await sb.auth.getSession();

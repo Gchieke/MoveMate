@@ -1,0 +1,75 @@
+# Builds the MoveMate Android app on every push to main.
+# - Without signing secrets: builds a debug APK (validates the project compiles).
+# - With signing secrets set: builds a signed release AAB ready for Google Play.
+#
+# To enable signed Play builds, add these repository secrets
+# (Settings → Secrets and variables → Actions):
+#   ANDROID_KEYSTORE_BASE64  — your upload keystore, base64-encoded
+#   ANDROID_KEYSTORE_PASSWORD
+#   ANDROID_KEY_ALIAS
+#   ANDROID_KEY_PASSWORD
+# Generate a keystore once with:
+#   keytool -genkeypair -v -keystore movemate-upload.keystore -alias movemate \
+#     -keyalg RSA -keysize 2048 -validity 10000
+name: Build Android
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'app.js'
+      - 'styles.css'
+      - 'privacy.html'
+      - 'capacitor.config.ts'
+      - 'android/**'
+      - 'package.json'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run cap:sync
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Decode upload keystore
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore
+
+      - name: Build signed release AAB
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        working-directory: android
+        run: >
+          ./gradlew bundleRelease
+          -Pandroid.injected.signing.store.file=app/release.keystore
+          -Pandroid.injected.signing.store.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          -Pandroid.injected.signing.key.alias=${{ secrets.ANDROID_KEY_ALIAS }}
+          -Pandroid.injected.signing.key.password=${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Build debug APK (no signing secrets configured yet)
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 == '' }}
+        working-directory: android
+        run: ./gradlew assembleDebug
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-build
+          path: |
+            android/app/build/outputs/bundle/release/*.aab
+            android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error

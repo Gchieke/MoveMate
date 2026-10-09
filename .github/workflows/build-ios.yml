@@ -1,0 +1,81 @@
+# Builds the MoveMate iOS app on every push to main (macOS runner).
+# - Always: builds for the iOS Simulator to prove the Xcode project compiles.
+# - With signing secrets set: also produces a signed IPA ready for TestFlight.
+#
+# To enable signed TestFlight/App Store builds, add these repository secrets
+# (Settings → Secrets and variables → Actions):
+#   APPLE_CERTIFICATE_BASE64        — your Distribution .p12, base64-encoded
+#   APPLE_CERTIFICATE_PASSWORD      — password for the .p12
+#   APPLE_PROVISIONING_PROFILE_BASE64 — App Store provisioning profile, base64-encoded
+#   APPLE_TEAM_ID                   — your Apple Developer Team ID
+# Export the .p12 from Keychain Access; create the provisioning profile at
+# developer.apple.com → Certificates, Identifiers & Profiles.
+name: Build iOS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'app.js'
+      - 'styles.css'
+      - 'privacy.html'
+      - 'capacitor.config.ts'
+      - 'ios/**'
+      - 'package.json'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run cap:sync
+
+      - name: Build for iOS Simulator (compile check)
+        working-directory: ios/App
+        run: >
+          xcodebuild -scheme App
+          -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath build/sim
+          build
+
+      - name: Install signing certificate
+        if: ${{ secrets.APPLE_CERTIFICATE_BASE64 != '' }}
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+
+      - name: Install provisioning profile
+        if: ${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 != '' }}
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 }}" | base64 -d > \
+            ~/Library/MobileDevice/Provisioning\ Profiles/movemate.mobileprovision
+
+      - name: Archive signed IPA
+        if: ${{ secrets.APPLE_CERTIFICATE_BASE64 != '' && secrets.APPLE_PROVISIONING_PROFILE_BASE64 != '' }}
+        working-directory: ios/App
+        run: >
+          xcodebuild -scheme App -configuration Release
+          -archivePath build/MoveMate.xcarchive archive
+          DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }}
+          && xcodebuild -exportArchive
+          -archivePath build/MoveMate.xcarchive
+          -exportPath build/ipa
+          -exportOptionsPlist ../../.github/workflows/export-options.plist
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ secrets.APPLE_CERTIFICATE_BASE64 != '' && secrets.APPLE_PROVISIONING_PROFILE_BASE64 != '' }}
+        with:
+          name: ios-ipa
+          path: ios/App/build/ipa/*.ipa
+          if-no-files-found: error
