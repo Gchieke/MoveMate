@@ -5,8 +5,8 @@
    SETUP: create a free Supabase project, run supabase-schema.sql
    in its SQL editor, then paste your Project URL + anon key below.
    ============================================================ */
-const SUPABASE_URL = "https://YOUR-PROJECT-REF.supabase.co";
-const SUPABASE_ANON_KEY = "PASTE-YOUR-ANON-KEY-HERE";
+const SUPABASE_URL = "https://ekatofqglhbvacdxbisk.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVrYXRvZnFnbGhidmFjZHhiaXNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1NTIzMjksImV4cCI6MjEwNzEyODMyOX0.5MPK9XMuv9LiuDTnPNtI69a23y1UXwQUXVd3puYzRBo";
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
