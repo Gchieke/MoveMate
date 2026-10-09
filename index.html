@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoveMate — neighbors helping neighbors move</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4f46e5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="MoveMate">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <div class="brand">📦 MoveMate</div>
+    <div id="userchip" class="userchip hidden"></div>
+  </header>
+
+  <section id="view-loading" class="view"><p class="muted">Loading…</p></section>
+
+  <!-- AUTH -->
+  <section id="view-auth" class="view hidden">
+    <div class="card auth-card">
+      <h1>Welcome to MoveMate</h1>
+      <p class="muted">Neighbors alerting neighbors about moves — and signing up to help.</p>
+      <label>Email<input id="auth-email" type="email" placeholder="you@example.com" autocomplete="email"></label>
+      <label>Password<input id="auth-password" type="password" placeholder="••••••••" autocomplete="current-password"></label>
+      <div class="row">
+        <button id="btn-signin" class="primary">Sign in</button>
+        <button id="btn-signup">Create account</button>
+      </div>
+      <p id="auth-msg" class="msg"></p>
+    </div>
+  </section>
+
+  <!-- ONBOARDING: NAME -->
+  <section id="view-onboarding-name" class="view hidden">
+    <div class="card">
+      <h2>What should neighbors call you?</h2>
+      <label>Display name<input id="ob-name" placeholder="e.g. George" maxlength="40"></label>
+      <label>Mobile number <small>(optional — for urgent SMS alerts)</small><input id="ob-phone" type="tel" placeholder="+1 555 010 2030" autocomplete="tel"></label>
+      <label class="roleline"><input type="checkbox" id="ob-sms"> Text me about urgent same-day moves</label>
+      <button id="btn-save-name" class="primary">Continue</button>
+    </div>
+  </section>
+
+  <!-- ONBOARDING: NEIGHBORHOOD -->
+  <section id="view-onboarding-hood" class="view hidden">
+    <div class="card">
+      <h2>Join your neighborhood</h2>
+      <p class="muted">MoveMate works per neighborhood. Create one and share the invite code, or join with a code from a neighbor.</p>
+      <div class="two">
+        <div>
+          <h3>Create</h3>
+          <label>Neighborhood name<input id="hood-name" placeholder="e.g. Maple Street" maxlength="60"></label>
+          <button id="btn-create-hood" class="primary">Create &amp; get code</button>
+        </div>
+        <div>
+          <h3>Join</h3>
+          <label>Invite code<input id="hood-code" placeholder="e.g. KX7Q2P" maxlength="12"></label>
+          <button id="btn-join-hood" class="primary">Join</button>
+        </div>
+      </div>
+      <p id="hood-msg" class="msg"></p>
+      <div id="hood-code-result" class="hidden callout"></div>
+    </div>
+  </section>
+
+  <!-- MAIN APP -->
+  <section id="view-app" class="view hidden">
+    <nav class="tabs">
+      <button data-tab="feed" class="tab active">Moves</button>
+      <button data-tab="post" class="tab">Post a move</button>
+      <button data-tab="mine" class="tab">My activity</button>
+    </nav>
+    <p class="hoodline">🏘️ <span id="hood-name-label"></span> · code <b id="hood-code-label"></b> · <button id="btn-signout" class="link">Sign out</button></p>
+
+    <div id="tab-feed" class="tabpanel"><div id="feed-list"></div></div>
+
+    <div id="tab-post" class="tabpanel hidden">
+      <div class="card">
+        <h2>Post a move</h2>
+        <label>Title<input id="mv-title" placeholder="e.g. Moving out — need hands Saturday" maxlength="80"></label>
+        <div class="two">
+          <label>Move type
+            <select id="mv-type"><option value="out">Moving out</option><option value="in">Moving in</option></select>
+          </label>
+          <label>Date<input id="mv-date" type="date"></label>
+        </div>
+        <label>Time window<input id="mv-time" placeholder="e.g. 9am – 1pm" maxlength="40"></label>
+        <label>Exact address <small>(only visible to you + confirmed helpers)</small><input id="mv-address" placeholder="123 Maple St, Apt 4B" maxlength="120"></label>
+        <label>Public area label<input id="mv-area" placeholder="e.g. Maple Street area" maxlength="80"></label>
+        <label>Details<textarea id="mv-desc" placeholder="3rd floor walk-up, lots of boxes, elevator available…" maxlength="500"></textarea></label>
+        <h3>Help needed</h3>
+        <div id="mv-roles"></div>
+        <button id="btn-post-move" class="primary">Alert neighbors 📣</button>
+        <p id="post-msg" class="msg"></p>
+      </div>
+    </div>
+
+    <div id="tab-mine" class="tabpanel hidden">
+      <div class="card">
+        <h3>🔔 Alert settings</h3>
+        <label>Mobile number<input id="set-phone" type="tel" placeholder="+1 555 010 2030" autocomplete="tel"></label>
+        <label class="roleline"><input type="checkbox" id="set-sms"> Text me about urgent same-day moves</label>
+        <button class="primary sm" id="btn-save-alerts">Save alerts</button>
+        <p id="alerts-msg" class="msg"></p>
+      </div>
+      <div id="mine-list"></div>
+    </div>
+
+    <div id="tab-detail" class="tabpanel hidden">
+      <button id="btn-back" class="link">← Back to moves</button>
+      <div id="detail-body"></div>
+    </div>
+  </section>
+
+</div>
+<div id="toast" class="toast hidden"></div>
+<script src="app.js"></script>
+</body>
+</html>
