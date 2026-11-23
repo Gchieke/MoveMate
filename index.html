@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MoveMate — neighbors helping neighbors move</title>
+<meta name="description" content="MoveMate connects neighbors for move-in and move-out help: post a move, your neighborhood gets alerted, and volunteers show up. Exact addresses stay private — only you and your confirmed helpers see them.">
+<meta property="og:title" content="MoveMate — neighbors helping neighbors move">
+<meta property="og:description" content="Post a move, neighbors get alerted, volunteers show up. Exact addresses are only visible to you + confirmed helpers.">
+<meta property="og:type" content="website">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#4f46e5">
 <meta name="mobile-web-app-capable" content="yes">
@@ -26,7 +30,42 @@
 
   <!-- AUTH -->
   <section id="view-auth" class="view hidden">
-    <div class="card auth-card">
+    <!-- LANDING (public, shown to logged-out visitors) -->
+    <div class="landing">
+      <div class="card landing-hero">
+        <h1>Moving? Your neighbors have your back. 📦</h1>
+        <p class="landing-sub">MoveMate is neighbors helping neighbors move — post your move, your neighborhood gets alerted, and volunteers from your own street show up to lend a hand. No movers to hire, no favors to owe strangers.</p>
+        <button class="primary landing-cta" onclick="document.getElementById('auth-card').scrollIntoView({behavior:'smooth'});document.getElementById('auth-email').focus({preventScroll:true});">Join your neighborhood</button>
+      </div>
+
+      <div class="card">
+        <h2>How it works</h2>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><h3>Post a move</h3><p class="muted">Moving in or out? Post the date, time window, and the help you need — extra hands, a truck, boxes.</p></div>
+          <div class="step"><div class="step-num">2</div><h3>Neighbors get alerted</h3><p class="muted">Everyone in your neighborhood gets an email alert about your move — nobody outside it does.</p></div>
+          <div class="step"><div class="step-num">3</div><h3>Volunteers show up</h3><p class="muted">Neighbors sign up for a role, you confirm your helpers, and moving day gets a whole lot lighter.</p></div>
+        </div>
+      </div>
+
+      <div class="card move-card">
+        <p class="sample-label">Example move</p>
+        <div class="mhead"><strong>Moving out — need hands Saturday</strong><span class="badge out">Moving out</span></div>
+        <p class="mdate">Saturday · 9am – 1pm · Maple Street area</p>
+        <p class="muted">3rd floor walk-up, lots of boxes, elevator available for the big items.</p>
+        <div class="need"><span>🙋 Extra hands</span><span class="pill">2 of 3 filled</span></div>
+        <div class="need"><span>🚚 Truck / large vehicle</span><span class="pill">1 of 1 filled</span></div>
+        <div class="helpers"><span class="chip">✓ Neighbor confirmed</span><span class="chip">✓ Neighbor confirmed</span></div>
+      </div>
+
+      <div class="trust-strip">
+        <span>🔒 Exact address only shown to you + confirmed helpers</span>
+        <span>✉️ Email alerts go to your neighborhood only</span>
+        <span>🏢 Run by Bit-SiTech LLC</span>
+        <span><a href="privacy.html">Privacy Policy</a></span>
+      </div>
+    </div>
+
+    <div class="card auth-card" id="auth-card">
       <h1>Welcome to MoveMate</h1>
       <p class="muted">Neighbors alerting neighbors about moves — and signing up to help.</p>
       <label>Email<input id="auth-email" type="email" placeholder="you@example.com" autocomplete="email"></label>

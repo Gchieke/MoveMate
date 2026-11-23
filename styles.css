@@ -49,3 +49,16 @@ button.link{background:none;border:none;color:#4f46e5;cursor:pointer;font-size:.
 .callout .bigcode{font-size:2em;font-weight:800;letter-spacing:.15em;color:#15803d}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:12px 20px;border-radius:12px;font-size:.95em;box-shadow:0 4px 16px rgba(0,0,0,.25);z-index:50;max-width:90vw;text-align:center}
 .auth-card{margin-top:30px}
+.landing-hero{text-align:center;padding:28px 20px}
+.landing-hero h1{font-size:1.7em;line-height:1.25}
+.landing-sub{font-size:1.05em;color:#444;line-height:1.55;max-width:560px;margin:8px auto 4px}
+.landing-cta{font-size:1.1em;padding:14px 28px}
+.steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:6px}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
+.step{text-align:left}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;background:#4f46e5;color:#fff;font-weight:800;margin-bottom:2px}
+.step h3{margin:6px 0 4px}
+.step p{margin:0;font-size:.92em;line-height:1.5}
+.sample-label{font-size:.78em;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;margin:0 0 8px}
+.trust-strip{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;background:#eef2ff;border-radius:12px;padding:12px 14px;margin-top:12px;font-size:.88em;color:#3730a3;font-weight:600}
+.trust-strip a{color:#4f46e5}
