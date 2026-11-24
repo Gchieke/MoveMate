@@ -29,6 +29,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+        ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
     steps:
       - uses: actions/checkout@v4
 
@@ -43,16 +45,16 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - uses: android-actions/setup-android@v3
 
       - name: Decode upload keystore
-        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        if: ${{ env.ANDROID_KEYSTORE_BASE64 != '' }}
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore
 
       - name: Build signed release AAB
-        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        if: ${{ env.ANDROID_KEYSTORE_BASE64 != '' }}
         working-directory: android
         run: >
           ./gradlew bundleRelease
@@ -62,7 +64,7 @@ jobs:
           -Pandroid.injected.signing.key.password=${{ secrets.ANDROID_KEY_PASSWORD }}
 
       - name: Build debug APK (no signing secrets configured yet)
-        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 == '' }}
+        if: ${{ env.ANDROID_KEYSTORE_BASE64 == '' }}
         working-directory: android
         run: ./gradlew assembleDebug
 
