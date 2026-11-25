@@ -1,6 +1,6 @@
 /* MoveMate service worker — cache-first app shell, works offline-ish.
    Bump CACHE when you ship new static assets. */
-const CACHE = "movemate-v1";
+const CACHE = "movemate-v2";
 const CORE = [
   "./",
   "./index.html",
