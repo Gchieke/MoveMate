@@ -3,12 +3,21 @@
 <plist version="1.0">
 <dict>
   <key>method</key>
-  <string>app-store</string>
+  <string>app-store-connect</string>
   <key>teamID</key>
-  <string>$(APPLE_TEAM_ID)</string>
+  <string>2R3H8NB9HM</string>
+  <key>signingStyle</key>
+  <string>manual</string>
+  <key>stripSwiftSymbols</key>
+  <true/>
+  <key>provisioningProfiles</key>
+  <dict>
+    <key>co.movemateapp.app</key>
+    <string>MoveMate App Store</string>
+  </dict>
+  <key>manageAppVersionAndBuildNumber</key>
+  <false/>
   <key>uploadSymbols</key>
   <true/>
-  <key>compileBitcode</key>
-  <false/>
 </dict>
 </plist>
